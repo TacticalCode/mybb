@@ -9,6 +9,17 @@
  * $Id$
  */
 
+ /**
+ * WARNING: MODIFIED FILE!
+ * This file was modified in order to provide bcrypt-hashing in MyBB.
+ * MyBB Group and other developers are not responsible for any modification
+ * done to the code, or damage done to your board!
+ * See: https://github.com/TacticalCode/mybb for further details
+ *
+ * Modification-Author: Damon Dransfeld
+ * Modification-License: CC-BY-SA 3.0
+ */
+
 if(function_exists("unicode_decode"))
 {
     // Unicode extension introduced in 6.0
@@ -2053,7 +2064,8 @@ function install_done()
 	$now = TIME_NOW;
 	$salt = random_str();
 	$loginkey = generate_loginkey();
-	$saltedpw = md5(md5($salt).md5($mybb->input['adminpass']));
+	$bcryptsalt = substr(str_shuffle('aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789./'), 0, 22);
+	$saltedpw = crypt(md5(md5($salt).md5($mybb->input['adminpass'])), '$2a$12$' . $bcryptsalt);
 
 	$newuser = array(
 		'username' => $db->escape_string($mybb->input['adminuser']),
